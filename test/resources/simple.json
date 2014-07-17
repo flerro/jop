@@ -1,0 +1,19 @@
+{
+    "type": "sample",
+    "link": "http://file-sample.com/json",
+    "name": "JavaScript Object Notation",
+    "metadata": [
+        {
+            "name": "extension",
+            "val": ".json"
+        },
+        {
+            "name": "media_type",
+            "val": "application/json"
+        },
+        {
+            "name": "website",
+            "val": "json.org"
+        }
+    ]
+}

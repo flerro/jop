@@ -1,0 +1,29 @@
+[
+    {
+        "id": 312,
+        "name": "Andrea",
+        "company": {
+            "name": "ACME",
+            "role": "Marketing Manager",
+            "location": "Italy"
+        }
+    },
+    {
+        "id": 545,
+        "name": "Sathya",
+        "company": {
+            "name": "ACME",
+            "role": "Sales Manager",
+            "location": "India"
+        }
+    },
+    {
+        "id": 123,
+        "name": "George",
+        "company": {
+            "name": "PIPPO",
+            "role": "Software Engineer",
+            "location": "UK"
+        }
+    }
+]
