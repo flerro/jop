@@ -2,9 +2,20 @@
   "name": "jop",
   "version": "0.0.1",
   "description": "A JSON processor",
-  "main": "main.js",
+  "main": "bin/main.js",
+  "preferGlobal": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "jop": "./bin/main.js"
+  },
+  "directories": {
+    "lib": "./lib",
+    "bin": "./bin"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
   },
   "repository": {
     "type": "git",
