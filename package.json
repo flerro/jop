@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/flerro/jop"
+    "url": "git@github.com:flerro/jop.git"
   },
   "keywords": [
     "json",
