@@ -32,6 +32,7 @@
   "homepage": "https://github.com/flerro/jop",
   "dependencies": {
     "lodash": "~2.4.1",
-    "optimist": "~0.6.1"
+    "optimist": "~0.6.1",
+    "yargs": "~1.2.6"
   }
 }
