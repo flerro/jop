@@ -35,9 +35,23 @@ exports['Filter items'] = function(test){
     test.done()
 };
 
-exports['Double filter items'] = function(test){
-    var operations = [{opt: 'f', expr: 'x.age > 18'}, {opt: 'f', expr: 'x.name.indexOf("B") == 0'}]
-    var expectedOutput = [{"name":"Beatrice", "age": 21}]
+exports['Complex pipeline: filter, map, filter'] = function(test){
+    var operations = [{opt: 'f', expr: 'x.age > 18'}, {opt: "m", expr: "{ x.name }"}, {opt: 'f', expr: 'x.indexOf("B") == 0'}]
+    var expectedOutput = ["Beatrice"]
+    test.deepEqual(expectedOutput, jop.processContent(people, operations))
+    test.done()
+};
+
+exports['Max age'] = function(test){
+    var operations = [{opt: 'max', expr: 'x.age'}]
+    var expectedOutput = {"name":"Beatrice", "age": 21}
+    test.deepEqual(expectedOutput, jop.processContent(people, operations))
+    test.done()
+};
+
+exports['Min age'] = function(test){
+    var operations = [{opt: 'min', expr: 'x.age'}]
+    var expectedOutput = {"name":"Carlo", "age": 16}
     test.deepEqual(expectedOutput, jop.processContent(people, operations))
     test.done()
 };
