@@ -1,4 +1,3 @@
-
 /*
  * The MIT License (MIT)
  *
@@ -23,33 +22,22 @@
  * SOFTWARE.
  */
 
-var cli = require('./cliutils');
-var jop = require('./processor').processContent;
 
-try {
+var jop = require('../lib/processor');
 
-    if (cli.showHelp) {
-        cli.usage(console.log);
-        process.exit(0);
-    }
+var people = '[{"name":"Andrea","age":19},{"name":"Beatrice", "age": 21},{"name":"Carlo", "age":16}]'
+var simple = '{"type":"sample","link":"http://file-sample.com/json","name":"JavaScript Object Notation","metadata":[{"name":"extension","val":".json"},{"name":"media_type","val":"application/json"},{"name":"website","val":"json.org"}]}'
 
-    var json = cli.jsonContentAsStream();
-    var jsonContent = "";
-    var indent = 2;
+exports['Filter items'] = function(test){
+    var operations = [{opt: 'f', expr: 'x.age > 18'}]
+    var expectedOutput = [{"name":"Andrea","age":19},{"name":"Beatrice", "age": 21}]
+    test.deepEqual(expectedOutput, jop.processContent(people, operations))
+    test.done()
+};
 
-    json.on('data', function(chunk){
-        jsonContent += chunk;
-    });
-
-    json.on('end', function(){
-        try {
-            var out = jop(jsonContent, cli.operationsPipeline(), cli.debug);
-            console.log( cli.prettyprint ? JSON.stringify(out, undefined, indent) : JSON.stringify(out));
-        } catch (e) {
-            cli.displayError(e);
-        }
-    });
-
-} catch (e) {
-    cli.displayError(e);
-}
+exports['Double filter items'] = function(test){
+    var operations = [{opt: 'f', expr: 'x.age > 18'}, {opt: 'f', expr: 'x.name.indexOf("B") == 0'}]
+    var expectedOutput = [{"name":"Beatrice", "age": 21}]
+    test.deepEqual(expectedOutput, jop.processContent(people, operations))
+    test.done()
+};
