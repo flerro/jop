@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-
+var _ = require('lodash');
 var jop = require('../lib/processor');
 
 var people = '[{"name":"Andrea","age":19},{"name":"Beatrice", "age": 21},{"name":"Carlo", "age":16}]'
@@ -120,8 +120,11 @@ exports['Sort people by age'] = function (test) {
 
 exports['Replace age with DOB (transform)'] = function (test) {
     var operations = [{opt:"t", expr: "x[key] = { name: val.name, dob: new Date().getFullYear() - val.age }"}];
+    var operations1 = [{opt:"t", expr: "x[key] = _.merge(_.omit(val, 'age'), { dob: new Date().getFullYear() - val.age })"}];
     var expectedOutput = [{name:'Andrea',dob:1995},{name:'Beatrice',dob:1993},{name:'Carlo',dob:1998}];
+    test.expect(2);
     test.deepEqual(jop.processContent(people, operations), expectedOutput);
+    test.deepEqual(jop.processContent(people, operations1), expectedOutput);
     test.done();
 };
 
@@ -133,28 +136,28 @@ exports['Add DOB property (transform)'] = function (test) {
 };
 
 exports['Get first person (head)'] = function (test) {
-    var operations = [{opt:"head", expr: true}];
-    var expectedOutput = {"name": "AndreA", "age": 16};
+    var operations = [{opt:"head", expr: 1}];
+    var expectedOutput = [ {"name": "Andrea", "age": 19} ];
     test.deepEqual(jop.processContent(people, operations), expectedOutput);
     test.done();
 };
 
 exports['Get last person (tail)'] = function (test) {
-    var operations = [{opt: 'tail', expr: true}];
-    var expectedOutput = {"name": "Carlo", "age": 16};
+    var operations = [{opt: 'tail', expr: 1}];
+    var expectedOutput = [{"name": "Carlo", "age": 16}];
     test.deepEqual(jop.processContent(people, operations), expectedOutput);
     test.done();
 };
 
 exports['Sample random person'] = function (test) {
-    var operations = [{opt:"sample"}];
-    var expectedOutput = 1;
-    test.strictEqual(jop.processContent(people, operations).size(), expectedOutput);
+    var operations = [{opt:"sample", expr: 2}];
+    var expectedOutput = 2;
+    test.strictEqual(_.size(jop.processContent(people, operations)), expectedOutput);
     test.done();
 };
 
 exports['Reduce right'] = function (test) {
-    var operations = [{opt: 'foldright', expr: '(x + 1 * key)'}];
+    var operations = [{opt: 'foldright', expr: 'x + 2 * key'}];
     var numbers = "[1, 2, 3]";
     var expectedOutput = 6;
     test.deepEqual(jop.processContent(numbers, operations), expectedOutput);
@@ -162,7 +165,7 @@ exports['Reduce right'] = function (test) {
 };
 
 exports['Reduce left'] = function (test) {
-    var operations = [{opt: 'foldleft', expr: '(x * (key + 1))'}];
+    var operations = [{opt: 'foldleft', expr: 'x + 2 * key'}];
     var numbers = "[3, 2, 1]";
     var expectedOutput = 6;
     test.deepEqual(jop.processContent(numbers, operations), expectedOutput);
