@@ -28,9 +28,9 @@ var jop = require('../lib/processor');
 var people = '[{"name":"Andrea","age":19},{"name":"Beatrice", "age": 21},{"name":"Carlo", "age":16}]'
 var simple = '{"type":"sample","link":"http://file-sample.com/json","name":"JavaScript Object Notation","metadata":[{"name":"extension","val":".json"},{"name":"media_type","val":"application/json"},{"name":"website","val":"json.org"}]}'
 
-exports['Filter items'] = function(test){
-    var operations = [{opt: 'f', expr: 'x.age > 18'}]
-    var expectedOutput = [{"name":"Andrea","age":19},{"name":"Beatrice", "age": 21}]
+exports['Count'] = function(test){
+    var operations = [{opt: 'c', expr: 'true'}]
+    var expectedOutput = 3
     test.deepEqual(expectedOutput, jop.processContent(people, operations))
     test.done()
 };
@@ -41,6 +41,15 @@ exports['Complex pipeline: filter, map, filter'] = function(test){
     test.deepEqual(expectedOutput, jop.processContent(people, operations))
     test.done()
 };
+
+
+exports['Filter items'] = function(test){
+    var operations = [{opt: 'f', expr: 'x.age > 18'}]
+    var expectedOutput = [{"name":"Andrea","age":19},{"name":"Beatrice", "age": 21}]
+    test.deepEqual(expectedOutput, jop.processContent(people, operations))
+    test.done()
+};
+
 
 exports['Max age'] = function(test){
     var operations = [{opt: 'max', expr: 'x.age'}]
