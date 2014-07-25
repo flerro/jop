@@ -26,7 +26,7 @@ var _ = require('lodash');
 var jop = require('../lib/processor');
 
 var people = '[{"name":"Andrea","age":19},{"name":"Beatrice", "age": 21},{"name":"Carlo", "age":16}]'
-var simple = '{"type":"sample","link":"http://file-sample.com/json","name":"JavaScript Object Notation","metadata":[{"name":"extension","val":".json"},{"name":"media_type","val":"application/json"},{"name":"website","val":"json.org"}]}'
+var jsonAsJSON = '{"type":"sample","link":"http://file-sample.com/json","name":"JavaScript Object Notation","metadata":[{"name":"extension","val":".json"},{"name":"media_type","val":"application/json"},{"name":"website","val":"json.org"}]}'
 
 exports['Count'] = function(test){
     var operations = [{opt: 'c', expr: 'true'}]
@@ -156,9 +156,34 @@ exports['Sample random person'] = function (test) {
     test.done();
 };
 
-exports['Get metadata'] = function (test) {
+exports['Get metadata from jsonAsJSON (prop)'] = function (test) {
     var operations = [{opt:"prop", expr: "metadata"}];
     var expectedOutput = [{name:'extension',val:'.json'},{name:'media_type',val:'application/json'},{name:'website',val:'json.org'}];
-    test.deepEqual(jop.processContent(simple, operations), expectedOutput);
+    test.deepEqual(jop.processContent(jsonAsJSON, operations), expectedOutput);
     test.done();
 };
+
+exports['Collect keys from jsonAsJSON'] = function (test) {
+    var operations = [{opt:"keys", expr: "true"}];
+    var expectedOutput = [ 'type', 'link', 'name', 'metadata' ];
+    test.deepEqual(jop.processContent(jsonAsJSON, operations), expectedOutput);
+    test.done();
+};
+
+exports['Collect values from jsonAsJSON'] = function (test) {
+    var operations = [{opt:"values", expr: "true"}];
+    var expectedOutput = [ 'sample',
+                            'http://file-sample.com/json',
+                            'JavaScript Object Notation',
+                            [ { name: 'extension', val: '.json' },
+                                { name: 'media_type', val: 'application/json' },
+                                { name: 'website', val: 'json.org' } ] ];
+    test.deepEqual(jop.processContent(jsonAsJSON, operations), expectedOutput);
+    test.done();
+};
+
+exports['Invalid operation'] = function(test) {
+    var operations = [{opt: 'cacca', expr: 'true'}]
+    test.throws(function() { jop.processContent(people, operations) }, Error)
+    test.done();
+}

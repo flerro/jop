@@ -28,8 +28,6 @@ var jop = require('../lib/processor');
 var cli = require('../lib/cliutils');
 
 exports['Available operations VS Available CLI options'] = function(test) {
-    var mainopts = ['h', 'help', 'p', 'pretty', 'd'];               // help, prettyprint and debug
-    var availOptions = _.difference(cli.opts.available, mainopts);
-    test.deepEqual(_.sortBy(jop.availableOperations), _.sortBy(availOptions));
+    test.deepEqual(_.sortBy(jop.availableOperations), _.sortBy(cli.opts.available));
     test.done()
 }
