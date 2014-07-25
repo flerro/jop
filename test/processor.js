@@ -36,36 +36,36 @@ exports['Count'] = function(test){
 };
 
 exports['Complex pipeline: filter, map, filter'] = function(test){
-    var operations = [{opt: 'f', expr: 'x.age > 18'}, {opt: "m", expr: "{ x.name }"}, {opt: 'f', expr: 'x.indexOf("B") == 0'}]
+    var operations = [{opt: 'f',  expr: 'it.age > 18'}, {opt: "collect", expr: "name"}, {opt: 'f',  expr: 'it.indexOf("B") == 0'}]
     var expectedOutput = ["Beatrice"]
     test.deepEqual(expectedOutput, jop.processContent(people, operations))
     test.done();
 };
 
 exports['Filter items'] = function(test){
-    var operations = [{opt: 'f', expr: 'x.age > 18'}]
+    var operations = [{opt: 'f',  expr: 'it.age > 18'}]
     var expectedOutput = [{"name":"Andrea","age":19},{"name":"Beatrice", "age": 21}]
     test.deepEqual(expectedOutput, jop.processContent(people, operations))
     test.done();
 };
 
 exports['Max age'] = function(test){
-    var operations = [{opt: 'max', expr: 'x.age'}]
+    var operations = [{opt: 'max',  expr: 'it.age'}]
     var expectedOutput = {"name":"Beatrice", "age": 21}
     test.deepEqual(expectedOutput, jop.processContent(people, operations))
     test.done();
 };
 
 exports['Min age'] = function(test){
-    var operations = [{opt: 'min', expr: 'x.age'}]
+    var operations = [{opt: 'min',  expr: 'it.age'}]
     var expectedOutput = {"name":"Carlo", "age": 16}
     test.deepEqual(expectedOutput, jop.processContent(people, operations))
     test.done();
 };
 
 exports['Count people by age'] = function (test) {
-    var operations = [{opt: 'countby', expr: 'x.age > 18'}];
-    var operations2 = [{opt: 'countby', expr: 'x.age'}];
+    var operations = [{opt: 'countby',  expr: 'it.age > 18'}];
+    var operations2 = [{opt: 'countby',  expr: 'it.age'}];
     var expectedOutput = { true: 2, false:  1};
     var expectedOutput2 = { "19": 1, "21": 1, "16": 1};
     test.deepEqual(jop.processContent(people, operations), expectedOutput);
@@ -74,14 +74,14 @@ exports['Count people by age'] = function (test) {
 };
 
 exports['Find first person containing "a" in name'] = function (test) {
-    var operations = [{opt: 'find', expr: 'x.name.indexOf("a") > 0'}];
+    var operations = [{opt: 'find',  expr: 'it.name.indexOf("a") > 0'}];
     var expectedOutput = {"name": "Andrea", "age": 19};
     test.deepEqual(jop.processContent(people, operations), expectedOutput);
     test.done();
 };
 
 exports['Group people by being over 18 years old'] = function (test) {
-    var operations = [{opt: 'groupby', expr: 'x.age > 18'}];
+    var operations = [{opt: 'groupby',  expr: 'it.age > 18'}];
     var expectedOutput = {
         false: [{"name": "Carlo", "age": 16}],
         true:  [{"name": "Andrea", "age": 19}, {"name": "Beatrice", "age": 21}]
@@ -91,36 +91,36 @@ exports['Group people by being over 18 years old'] = function (test) {
 };
 
 exports['Index of 19 years old person'] = function (test) {
-    var operations = [{opt:"indexof", expr: "x.age === 19"}];
+    var operations = [{opt:"indexof", expr: "it.age === 19"}];
     var expectedOutput = 0;
     test.deepEqual(jop.processContent(people, operations), expectedOutput);
     test.done();
 };
 
 exports['Index of the last 19 years old person'] = function (test) {
-    var operations = [{opt:"lastindexof", expr: "x.age === 19"}];
+    var operations = [{opt:"lastindexof", expr: "it.age === 19"}];
     var expectedOutput = 0;
     test.deepEqual(jop.processContent(people, operations), expectedOutput);
     test.done();
 };
 
-exports['List people age (map)'] = function (test) {
-   var operations = [{opt:"map", expr: "x.age"}];
+exports['Collect people age'] = function (test) {
+   var operations = [{opt:"collect", expr: "age"}];
     var expectedOutput = [ 19, 21, 16 ];
     test.deepEqual(jop.processContent(people, operations), expectedOutput);
     test.done();
 };
 
 exports['Sort people by age'] = function (test) {
-    var operations = [{opt: 'sortby', expr: "x.age"}];
+    var operations = [{opt: 'sortby', expr: "it.age"}];
     var expectedOutput = [{name:'Carlo',age:16},{name:'Andrea',age:19},{name:'Beatrice',age:21}];
     test.deepEqual(jop.processContent(people, operations), expectedOutput);
     test.done();
 };
 
 exports['Replace age with DOB (transform)'] = function (test) {
-    var operations = [{opt:"t", expr: "x[key] = { name: val.name, dob: new Date().getFullYear() - val.age }"}];
-    var operations1 = [{opt:"t", expr: "x[key] = _.merge(_.omit(val, 'age'), { dob: new Date().getFullYear() - val.age })"}];
+    var operations = [{opt:"t", expr: "out[key] = { name: it.name, dob: new Date().getFullYear() - it.age }"}];
+    var operations1 = [{opt:"transform", expr: "out[key] = _.merge(_.omit(it, 'age'), { dob: new Date().getFullYear() - it.age })"}];
     var expectedOutput = [{name:'Andrea',dob:1995},{name:'Beatrice',dob:1993},{name:'Carlo',dob:1998}];
     test.expect(2);
     test.deepEqual(jop.processContent(people, operations), expectedOutput);
@@ -129,7 +129,7 @@ exports['Replace age with DOB (transform)'] = function (test) {
 };
 
 exports['Add DOB property (transform)'] = function (test) {
-    var operations = [{opt:"t", expr: "x[key] = _.merge(_.mapValues(val), {dob: (new Date().getFullYear() - val.age)} )"}];
+    var operations = [{opt:"t", expr: "out[key] = _.merge(_.mapValues(it), {dob: (new Date().getFullYear() - it.age)} )"}];
     var expectedOutput = [{name:'Andrea',age:19,dob:1995},{name:'Beatrice',age:21,dob:1993},{name:'Carlo',age:16,dob:1998}];
     test.deepEqual(jop.processContent(people, operations), expectedOutput);
     test.done();
