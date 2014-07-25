@@ -156,18 +156,9 @@ exports['Sample random person'] = function (test) {
     test.done();
 };
 
-exports['Reduce right'] = function (test) {
-    var operations = [{opt: 'foldright', expr: 'x + 2 * key'}];
-    var numbers = "[1, 2, 3]";
-    var expectedOutput = 6;
-    test.deepEqual(jop.processContent(numbers, operations), expectedOutput);
-    test.done();
-};
-
-exports['Reduce left'] = function (test) {
-    var operations = [{opt: 'foldleft', expr: 'x + 2 * key'}];
-    var numbers = "[3, 2, 1]";
-    var expectedOutput = 6;
-    test.deepEqual(jop.processContent(numbers, operations), expectedOutput);
+exports['Get metadata'] = function (test) {
+    var operations = [{opt:"prop", expr: "metadata"}];
+    var expectedOutput = [{name:'extension',val:'.json'},{name:'media_type',val:'application/json'},{name:'website',val:'json.org'}];
+    test.deepEqual(jop.processContent(simple, operations), expectedOutput);
     test.done();
 };
