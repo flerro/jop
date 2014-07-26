@@ -1,6 +1,6 @@
-# jop
+A commandline JSON processor powered by [node.js](http://nodejs.org/).
 
-A commandline JSON processor powered by [node.js](http://groovy.codehaus.org/).
+For general informations related to _jop_ please read the [related article on my blog](http://www.rolanfg.net/2014/07/29/json-processor-commandline-nodejs/).
 
 ## Install
 
@@ -12,8 +12,10 @@ A commandline JSON processor powered by [node.js](http://groovy.codehaus.org/).
     
 ## Usage
 
-```
+Need some help? Use the ```-h``` option
 
+```
+ → jop -h
 
 Usage: jop [OPTIONS] [JSON]
 
@@ -21,7 +23,7 @@ Usage: jop [OPTIONS] [JSON]
 
   Many OPTIONS requires a javascript expression that is evaluated on each item of the input
   collection to perform the requested operation. In the expression context, current item can
-  be referenced via "it" and lodash javascript library is exposed via "_".
+  be referenced via "it" and Lo-Dash javascript library is exposed via "_".
 
 Examples:
   jop --findall "it.age > 18" people.json                              Find all people older than 18
@@ -29,7 +31,6 @@ Examples:
   jop --max "it.age" people.json                                       Get max age for people
   jop -t "out[key]={name: it.name, dob: 2014 - it.age}" people.json    Obtain year from people age
   jop --prop metadata --count simple.json                              Count metadata property items
-
 
 Options:
   -c, --count      Count all elements in input                                                      
@@ -52,9 +53,224 @@ Options:
   --keys           Collect object keys from input                                                   
   --values         Collect object values from input                                                 
   -h, --help       Display usage information                                                                                             
-                                   
 ```
 
-For more examples read the [related article on my blog](http://www.rolanfg.net/TBD/json-processor-nodejs)
+JSON content can be passed as input file or piped in from standard input (but NOT on cygwin, cfr. Known issues).
 
+## Usage examples
 
+Input files used in the examples:
+
+```
+ → cat people.json
+[{"name":"Andrea","age":19},{"name":"Beatrice", "age": 21},{"name":"Carlo", "age":16}]
+
+ → cat simple.json
+{
+    "type": "sample",
+    "link": "http://file-sample.com/json",
+    "name": "JavaScript Object Notation",
+    "metadata": [
+        {
+            "name": "extension",
+            "val": ".json"
+        },
+        {
+            "name": "media_type",
+            "val": "application/json"
+        },
+        {
+            "name": "website",
+            "val": "json.org"
+        }
+    ]
+}
+```
+
+### Pretty-printing
+
+Display input pretty-printed
+
+```
+ → jop -p people.json
+[
+  {
+    "name": "Andrea",
+    "age": 19
+  },
+  {
+    "name": "Beatrice",
+    "age": 21
+  },
+  {
+    "name": "Carlo",
+    "age": 16
+  }
+]
+```
+
+### Filtering 
+
+Find items in a collection of objects
+
+```
+ → jop -f "it.age > 18" people.json 
+[{"name":"Andrea","age":19},{"name":"Beatrice", "age": 21}]
+
+ → jop -f "it.age > 18" --collect "name" -f "it.indexOf("B") == 0"  people.json
+["Beatrice"]
+
+ → jop --find "it.name.indexOf("a") > 0" people.json
+{"name": "Andrea", "age": 19}
+
+ → jop --indexof "it.age === 19" people.json
+0
+
+ → jop --lastindexof "it.age === 19" people.json
+0
+```
+
+Extract a subset of objects from a collection
+
+```
+ → jop --head 1 people.json
+[ {"name": "Andrea", "age": 19} ]
+
+ → jop --tail 1 people.json
+[{"name": "Carlo", "age": 16}]
+
+ → jop --sample 2 people.json
+[{name:"Carlo",age:16},{name:"Andrea",age:19}]
+```
+
+Get object having max/min property value (```age``` value)
+
+```
+ → jop --max "it.age" people.json
+{"name":"Beatrice", "age": 21}
+
+ → jop --min "it.age" people.json
+{"name":"Carlo", "age": 16}
+```
+
+### Counting, grouping, sorting
+
+Counting objects
+
+```
+ → jop --count  people.json
+3
+
+ → jop --countby "it.age" people.json
+{ "19": 1, "21": 1, "16": 1}
+
+ → jop --countby "it.age > 18" people.json
+{ true: 2, false:  1}
+```
+
+Grouping objects from a collection
+
+```
+ → jop --groupby "it.age" people.json
+{ "19": 1, "21": 1, "16": 1}
+
+ → jop --groupby "it.age > 18" people.json
+{ true"19": 1, "21": 1, "16": 1}
+```
+
+Sorting objects in a collection
+
+```
+ → echo "[1,3,2]" | jop --sort
+[1,2,3]
+
+ → jop --sortby "it.age" people.json
+[{name:"Carlo",age:16},{name:"Andrea",age:19},{name:"Beatrice",age:21}]
+```
+
+### Extracting values 
+
+Collect property value (```age``` value) for each object in the collection 
+
+```
+ → jop --collect "age" people.json
+[ 19, 21, 16 ]
+```
+
+Get the value of a property (metadata)
+
+```
+ → jop --prop "metadata" simple.json
+[{name:"extension",val:".json"},{name:"media_type",val:"application/json"},{name:"website",val:"json.org"}]
+```
+
+### Transformation 
+
+The ```transform``` option iterates over a collection binding, in the expression context, also:
+  - ```out``` as the global result object
+  - ```key``` as the current object key
+
+So it is possible to tranform input into something else
+(```it```, as usual, is the current object value).
+
+Tranform input collection (create a person with name and year of birth)
+
+```
+ → jop -t "out[key] = { name: it.name, dob: new Date().getFullYear() - it.age }" -p people.json
+[
+  {
+    "name": "Andrea",
+    "age": 19,
+    "yob": 1995
+  },
+  {
+    "name": "Beatrice",
+    "age": 21,
+    "yob": 1993
+  },
+  {
+    "name": "Carlo",
+    "age": 16,
+    "yob": 1998
+  }
+]
+```
+
+Transform input adding a property (year of birth, yob) to each object
+
+```
+ → jop -t "out[key] = _.merge(_.mapValues(it), {yob: (new Date().getFullYear() - it.age)} )" -p people.json
+[
+  {
+    "name": "Andrea",
+    "age": 19,
+    "yob": 1995
+  },
+  {
+    "name": "Beatrice",
+    "age": 21,
+    "yob": 1993
+  },
+  {
+    "name": "Carlo",
+    "age": 16,
+    "yob": 1998
+  }
+]
+
+```
+
+Via the ```_``` variable it is possible to access to all the [Lo-Dash library](http://lodash.com/docs) functionality in the expression context.
+
+### Known issues
+
+Still no major issues at the moment. However I had no chance to really stress test _jop_, so your mileage may vary.
+
+Please be aware that _jop_ works **on cygwin** but **input piping is NOT supported** (this is a known  node.js limitation), eg.:
+
+```
+ → echo "{"a":1}" | jop -p
+Error: EINVAL, invalid argument
+```
+
+Workaround: redirect output of the first command to file, than feed this file to _jop_ as input. 
