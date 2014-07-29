@@ -25,10 +25,15 @@
     "processor"
   ],
   "author": "Francesco Lerro <francesco.lerro@gmail.com> (http://www.rolandfg.net/)",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/flerro/jop/issues"
   },
+  "licenses": [
+      {
+        "type": "MIT",
+        "url": "http://github.com/flerro/jop/raw/master/LICENSE"
+      }
+  ],
   "homepage": "https://github.com/flerro/jop",
   "dependencies": {
     "lodash": "~2.4.1",
