@@ -1,11 +1,11 @@
 {
   "name": "jop",
-  "version": "0.0.1",
-  "description": "A JSON processor",
+  "version": "1.0.0",
+  "description": "A commandline JSON processor",
   "main": "lib/main.js",
   "preferGlobal": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nodeunit test"
   },
   "bin": {
     "jop": "./bin/main.js"

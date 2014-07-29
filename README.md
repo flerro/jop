@@ -1,36 +1,31 @@
 A commandline JSON processor powered by [node.js](http://nodejs.org/).
 
-For general informations related to _jop_ please read the [related article on my blog](http://www.rolanfg.net/2014/07/29/json-processor-commandline-nodejs/).
+For general informations about _jop_ please [read this blog post](http://www.rolanfg.net/2014/07/29/json-processor-commandline-nodejs/).
 
 ## Install
 
+Use [npm](http://github.com/isaacs/npm) to install _jop_ globally:
+
     npm install jop -g 
 
-## Tests
+Run the tests with [nodeunit](https://github.com/caolan/nodeunit):
 
     nodeunit test
     
-## Usage
+## Usage options
 
-Need some help? Use the ```-h``` option
+To test installation and display all available command options, invoke _jop_ with the ```-h``` option
 
 ```
  → jop -h
 
 Usage: jop [OPTIONS] [JSON]
-
   Process JSON in input executing an operation for each OPTION.
-
-  Many OPTIONS requires a javascript expression that is evaluated on each item of the input
-  collection to perform the requested operation. In the expression context, current item can
-  be referenced via "it" and Lo-Dash javascript library is exposed via "_".
-
-Examples:
-  jop --findall "it.age > 18" people.json                              Find all people older than 18
-  jop --collect "age" people.json                                      Get people age as an array
-  jop --max "it.age" people.json                                       Get max age for people
-  jop -t "out[key]={name: it.name, dob: 2014 - it.age}" people.json    Obtain year from people age
-  jop --prop metadata --count simple.json                              Count metadata property items
+  Many OPTIONS require a javascript expression that is evaluated on each item of the input
+  collection to perform the requested operation. In the expression context, current item 
+  can be referenced via "it" and Lo-Dash javascript library via "_".
+  
+...
 
 Options:
   -c, --count      Count all elements in input                                                      
@@ -55,11 +50,11 @@ Options:
   -h, --help       Display usage information                                                                                             
 ```
 
-JSON content can be passed as input file or piped in from standard input (but NOT on cygwin, cfr. Known issues).
+JSON content can be passed as input file or piped in from standard input (except on cygwin - cfr. [Known issues](#known-issues)).
 
 ## Usage examples
 
-Input files used in the examples:
+Input files used in the following examples:
 
 ```
  → cat people.json
@@ -181,7 +176,7 @@ Grouping objects from a collection
 Sorting objects in a collection
 
 ```
- → echo "[1,3,2]" | jop --sort
+ → echo "[1,3,2]" | jop -s it
 [1,2,3]
 
  → jop --sortby "it.age" people.json
@@ -197,7 +192,7 @@ Collect property value (```age``` value) for each object in the collection
 [ 19, 21, 16 ]
 ```
 
-Get the value of a property (metadata)
+Get the value of a property (eg. ```metadata``` property)
 
 ```
  → jop --prop "metadata" simple.json
@@ -236,10 +231,10 @@ Tranform input collection (create a person with name and year of birth)
 ]
 ```
 
-Transform input adding a property (year of birth, yob) to each object
+Transform input adding a property (eg. year of birth) to each object
 
 ```
- → jop -t "out[key] = _.merge(_.mapValues(it), {yob: (new Date().getFullYear() - it.age)} )" -p people.json
+ → jop -t "out[key] = _.merge( _.mapValues(it), {yob: (new Date().getFullYear() - it.age)} )" -p people.json
 [
   {
     "name": "Andrea",
@@ -260,13 +255,13 @@ Transform input adding a property (year of birth, yob) to each object
 
 ```
 
-Via the ```_``` variable it is possible to access to all the [Lo-Dash library](http://lodash.com/docs) functionality in the expression context.
+The example above shows also how to use the ```_``` variable to access [Lo-Dash library](http://lodash.com/docs) methods in the expression context.
 
 ### Known issues
 
 Still no major issues at the moment. However I had no chance to really stress test _jop_, so your mileage may vary.
 
-Please be aware that _jop_ works **on cygwin** but **input piping is NOT supported** (this is a known  node.js limitation), eg.:
+Please be aware that _jop_ works **on cygwin** but **input piping is NOT supported** (this is a _known node.js limitation_), eg.:
 
 ```
  → echo "{"a":1}" | jop -p
