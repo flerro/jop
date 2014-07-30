@@ -1,6 +1,6 @@
 A commandline JSON processor powered by [node.js](http://nodejs.org/).
 
-For an overview [read this blog post](http://www.rolandfg.net/2014/07/29/json-commandline-processor/), pragmatic informations on how to install and use _jop_ follow.
+Informations on how to install and use _jop_ follow, for an overview [read this blog post](http://www.rolandfg.net/2014/07/29/json-commandline-processor/).
 
 ## Install
 
