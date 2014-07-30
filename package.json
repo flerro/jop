@@ -1,6 +1,6 @@
 {
   "name": "jop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A commandline JSON processor",
   "main": "lib/main.js",
   "preferGlobal": true,
@@ -22,7 +22,8 @@
   },
   "keywords": [
     "json",
-    "processor"
+    "processor",
+    "cli"
   ],
   "author": "Francesco Lerro <francesco.lerro@gmail.com> (http://www.rolandfg.net/)",
   "bugs": {
