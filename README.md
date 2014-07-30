@@ -1,6 +1,6 @@
 A commandline JSON processor powered by [node.js](http://nodejs.org/).
 
-For general informations about _jop_ please [read this blog post](http://www.rolanfg.net/2014/07/29/json-processor-commandline-nodejs/).
+For an overview [read this blog post](http://www.rolandfg.net/2014/07/29/json-commandline-processor/), pragmatic informations on how to install and use _jop_ follow.
 
 ## Install
 
@@ -14,7 +14,7 @@ Run the tests with [nodeunit](https://github.com/caolan/nodeunit):
     
 ## Usage options
 
-To test installation and display all available command options, invoke _jop_ with the ```-h``` option
+To test installation and display all available command options, invoke _jop_ with ```-h```:
 
 ```
  → jop -h
