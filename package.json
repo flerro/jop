@@ -1,8 +1,7 @@
 {
   "name": "jop",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "A commandline JSON processor",
-  "main": "lib/main.js",
   "preferGlobal": true,
   "scripts": {
     "test": "nodeunit test"
