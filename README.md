@@ -211,7 +211,7 @@ So it is possible to tranform input into something else
 Tranform input collection (create a person with name and year of birth)
 
 ```
- → jop -t "out[key] = { name: it.name, dob: new Date().getFullYear() - it.age }" -p people.json
+ → jop -t "out[key] = { name: it.name, yob: new Date().getFullYear() - it.age }" -p people.json
 [
   {
     "name": "Andrea",
