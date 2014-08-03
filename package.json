@@ -1,16 +1,17 @@
 {
   "name": "jop",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A commandline JSON processor",
   "preferGlobal": true,
   "scripts": {
     "test": "nodeunit test"
   },
   "bin": {
-    "jop": "./lib/main.js"
+    "jop": "./bin/main"
   },
   "directories": {
-    "lib": "./lib"
+    "lib": "./lib",
+    "bin": "./bin"
   },
   "engines": {
     "node": ">= 0.10.0"
