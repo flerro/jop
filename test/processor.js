@@ -119,8 +119,8 @@ exports['Sort people by age'] = function (test) {
 };
 
 exports['Replace age with DOB (transform)'] = function (test) {
-    var operations = [{opt:"t", expr: "out[key] = { name: it.name, dob: new Date().getFullYear() - it.age }"}];
-    var operations1 = [{opt:"transform", expr: "out[key] = _.merge(_.omit(it, 'age'), { dob: new Date().getFullYear() - it.age })"}];
+    var operations = [{opt:"t", expr: "out[key] = { name: it.name, dob: new Date(2014, 1, 1).getFullYear() - it.age }"}];
+    var operations1 = [{opt:"transform", expr: "out[key] = _.merge(_.omit(it, 'age'), { dob: new Date(2014, 1, 1).getFullYear() - it.age })"}];
     var expectedOutput = [{name:'Andrea',dob:1995},{name:'Beatrice',dob:1993},{name:'Carlo',dob:1998}];
     test.expect(2);
     test.deepEqual(jop.processContent(people, operations), expectedOutput);
@@ -129,7 +129,7 @@ exports['Replace age with DOB (transform)'] = function (test) {
 };
 
 exports['Add DOB property (transform)'] = function (test) {
-    var operations = [{opt:"t", expr: "out[key] = _.merge(_.mapValues(it), {dob: (new Date().getFullYear() - it.age)} )"}];
+    var operations = [{opt:"t", expr: "out[key] = _.merge(_.mapValues(it), {dob: (new Date(2014, 1, 1).getFullYear() - it.age)} )"}];
     var expectedOutput = [{name:'Andrea',age:19,dob:1995},{name:'Beatrice',age:21,dob:1993},{name:'Carlo',age:16,dob:1998}];
     test.deepEqual(jop.processContent(people, operations), expectedOutput);
     test.done();
