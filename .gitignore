@@ -31,4 +31,5 @@ node_modules
 .lock-wscript
 
 .idea/
+jop.iml
 !bin/main

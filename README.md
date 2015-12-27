@@ -1,6 +1,6 @@
 A commandline JSON processor powered by [node.js](http://nodejs.org/).
 
-Informations on how to install and use _jop_ follow, for an overview [read this blog post](http://www.rolandfg.net/2014/07/29/json-commandline-processor/).
+Quick install and usage guide follow, find more info about _jop_ in [this blog post](http://www.rolandfg.net/2014/07/29/json-commandline-processor/).
 
 ## Install
 
@@ -8,9 +8,11 @@ Use [npm](http://github.com/isaacs/npm) to install _jop_ globally:
 
     npm install jop -g 
 
-Run the tests with [nodeunit](https://github.com/caolan/nodeunit):
+and optionally to run the tests:
 
-    nodeunit test
+    npm test
+
+Tests depends on [nodeunit](https://github.com/caolan/nodeunit).
     
 ## Usage options
 
@@ -259,13 +261,4 @@ The example above shows also how to use the ```_``` variable to access [Lo-Dash 
 
 ### Known issues
 
-Still no major issues at the moment. However I had no chance to really stress test _jop_, so your mileage may vary.
-
-Please be aware that _jop_ works **on cygwin** but **input piping is NOT supported** (this is a _known node.js limitation_), eg.:
-
-```
- → echo "{"a":1}" | jop -p
-Error: EINVAL, invalid argument
-```
-
-Workaround: redirect output of the first command to file, than feed this file to _jop_ as input. 
+No major issues at the moment. If you find one please [let me know](https://github.com/flerro/jop/issues).

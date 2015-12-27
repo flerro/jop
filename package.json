@@ -1,6 +1,6 @@
 {
   "name": "jop",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A commandline JSON processor",
   "preferGlobal": true,
   "scripts": {
@@ -29,19 +29,13 @@
   "bugs": {
     "url": "https://github.com/flerro/jop/issues"
   },
-  "licenses": [
-      {
-        "type": "MIT",
-        "url": "http://github.com/flerro/jop/raw/master/LICENSE"
-      }
-  ],
+  "licenses": [ { "license": "MIT" } ],
   "homepage": "https://github.com/flerro/jop",
   "dependencies": {
-    "lodash": "~2.4.1",
-    "optimist": "~0.6.1",
-    "yargs": "~1.2.6"
+    "lodash": "~3.10.1",
+    "yargs": "~3.31.0"
   },
   "devDependencies": {
-    "nodeunit": "~0.9.0"
+    "nodeunit": "~0.9.1"
   }
 }
